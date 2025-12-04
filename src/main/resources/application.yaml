@@ -1,3 +1,16 @@
 spring:
   application:
     name: Ai invest bot
+
+logging:
+  level:
+    org:
+      apache:
+        http: DEBUG
+
+perplexity:
+  token: ${PERPLEXITY_TOKEN}
+
+invest:
+  connector:
+    token: ${INVEST_TOKEN}
