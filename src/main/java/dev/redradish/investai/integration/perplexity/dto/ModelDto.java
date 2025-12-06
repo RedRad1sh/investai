@@ -7,11 +7,11 @@ import lombok.Getter;
  * @author nkucherenko
  */
 @Getter
-public enum Model {
+public enum ModelDto {
     SONAR_PRO("sonar-pro"),
     SONAR("sonar");
 
-    Model(String name) {
+    ModelDto(String name) {
         this.name = name;
     }
 

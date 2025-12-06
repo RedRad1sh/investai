@@ -1,5 +1,7 @@
 package dev.redradish.investai.integration.perplexity.dto;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
 
 import java.util.List;
@@ -8,5 +10,6 @@ import java.util.List;
  * @author nkucherenko
  */
 @Builder
-public record QueryDto(Model model, String query, List<MessageDto> messages) {
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public record QueryDto(ModelDto model, String query, List<MessageDto> messages, List<String> searchDomainFilter) {
 }

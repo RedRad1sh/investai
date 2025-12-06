@@ -62,18 +62,23 @@
 		<dependency>
 			<groupId>ru.tinkoff.piapi</groupId>
 			<artifactId>java-sdk-spring-boot-starter</artifactId>
-			<version>1.40</version>
-		</dependency>
-		<!-- Для поддержки стратегий -->
-		<dependency>
-			<groupId>ru.tinkoff.piapi</groupId>
-			<artifactId>java-sdk-strategy</artifactId>
-			<version>1.40</version>
+			<version>1.43</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hobsoft.spring</groupId>
 			<artifactId>spring-rest-template-logger</artifactId>
 			<version>2.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.openai</groupId>
+			<artifactId>openai-java</artifactId>
+			<version>4.9.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.hypersistence/hypersistence-utils-hibernate-70 -->
+		<dependency>
+			<groupId>io.hypersistence</groupId>
+			<artifactId>hypersistence-utils-hibernate-70</artifactId>
+			<version>3.13.2</version>
 		</dependency>
 	</dependencies>
 

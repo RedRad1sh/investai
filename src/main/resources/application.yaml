@@ -1,12 +1,15 @@
 spring:
   application:
     name: Ai invest bot
-
+  jackson:
+    property-naming-strategy: SNAKE_CASE
 logging:
   level:
-    org:
-      apache:
-        http: DEBUG
+    org.apache.http: DEBUG
+    io.grpc: DEBUG                    # Все gRPC пакеты
+    io.grpc.netty.shaded: DEBUG       # Netty транспорт
+    ru.tinkoff.piapi: DEBUG           # Tinkoff SDK
+    dev.redradish.investai: DEBUG     # Ваш код
 
 perplexity:
   token: ${PERPLEXITY_TOKEN}
@@ -14,3 +17,43 @@ perplexity:
 invest:
   connector:
     token: ${INVEST_TOKEN}
+    connection:
+      timeout: 30000
+      keepalive: 60000
+      max-message-size: 16777216
+      retry:
+        max-attempts: 3
+        wait-duration: 2000
+    grpc:
+      debug: false
+      context-fork: true
+    target: invest-public-api.tinkoff.ru:443
+    sandbox:
+      target: sandbox-invest-public-api.tinkoff.ru:443
+      enabled: false
+  stream:
+    market-data:
+      max-streams-count: 16
+      max-subscriptions-count: 300
+    inactivity-timeout: 10000
+    ping-delay: 5000
+
+
+domain:
+  filter:
+    - https://smart-lab.ru/
+    - https://ru.tradingview.com/
+    - https://rusbonds.ru/
+    - https://www.dohod.ru/analytic/bonds
+    - https://www.tbank.ru/invest/research/
+    - https://gazprombank.investments/
+    - https://tx.me/markettwits
+    - https://chr.rbc.ru/
+    - https://ru.investing.com/
+    - https://www.forbes.ru/finansy/
+    - https://www.kommersant.ru/theme/137
+    - https://www.investopedia.com/
+    - https://marketwatch.com
+    - https://marketcheese.com
+    - https://www.tbank.ru/invest/stocks
+

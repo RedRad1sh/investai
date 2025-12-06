@@ -18,6 +18,6 @@ public class StockMarketAnalysisController {
 
     @GetMapping("/general")
     public ResponseEntity<String> getGeneralAnalytics() {
-        return ResponseEntity.ok(queryMaker.makeQuery(""));
+        return ResponseEntity.ok(queryMaker.makeQuery("Составь мне инвестиционный портфель"));
     }
 }

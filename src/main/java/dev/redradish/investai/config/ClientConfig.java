@@ -1,6 +1,5 @@
 package dev.redradish.investai.config;
 
-import org.hobsoft.spring.resttemplatelogger.LoggingCustomizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -9,23 +8,52 @@ import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverters;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
 import org.springframework.util.StreamUtils;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.PropertyNamingStrategies;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
+import java.text.SimpleDateFormat;
 
 /**
  * @author nkucherenko
  */
 @Configuration
 public class ClientConfig {
+    private static final String PERPLEXITY_API_URL = "https://api.perplexity.ai";
+
     @Bean
-    public RestTemplate restTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate;
+    public JsonMapper jacksonObjectMapper() {
+        return JsonMapper.builder()
+            .findAndAddModules()
+            .enable(SerializationFeature.INDENT_OUTPUT)
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            .defaultDateFormat(new SimpleDateFormat("yyyy-MM-dd"))
+            .propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
+            .build();
+    }
+
+    @Bean
+    public RestClient perplexityRestClient(JsonMapper jsonMapper) {
+        return RestClient.builder()
+            .requestInterceptor(new LoggingInterceptor())
+            .baseUrl(PERPLEXITY_API_URL)
+            .configureMessageConverters(HttpMessageConverters.Builder::registerDefaults)
+            .configureMessageConverters(clientBuilder -> clientBuilder
+                .addCustomConverter(new StringHttpMessageConverter(StandardCharsets.UTF_8))
+                .addCustomConverter(new ByteArrayHttpMessageConverter())
+                .addCustomConverter(new JacksonJsonHttpMessageConverter(jsonMapper))
+            )
+            .build();
     }
 
     public class LoggingInterceptor implements ClientHttpRequestInterceptor {
@@ -54,7 +82,6 @@ public class ClientConfig {
         private void logResponseDetails(ClientHttpResponse response) throws IOException {
             logger.info("Response Status Code: {}", response.getStatusCode());
             logger.info("Response Status Text: {}", response.getStatusText());
-            logger.info("Response Body: {}", StreamUtils.copyToString(response.getBody(), StandardCharsets.UTF_8));
         }
     }
 }
